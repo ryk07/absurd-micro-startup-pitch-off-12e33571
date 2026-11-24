@@ -41,6 +41,12 @@ ENTRY = (
 
 
 def main():
+    # Gate guard: the sealed scorer refuses entry.txt outside 1..200 chars,
+    # so fail loudly here instead of shipping an invalid entry silently.
+    if not 1 <= len(ENTRY) <= 200:
+        raise SystemExit(f"entry is {len(ENTRY)} chars, must be 1..200")
+    if ENTRY != ENTRY.strip() or not ENTRY.strip():
+        raise SystemExit("entry must be non-blank text with no edge whitespace")
     out_dir = "/output"
     os.makedirs(out_dir, exist_ok=True)
     path = os.path.join(out_dir, "entry.txt")
